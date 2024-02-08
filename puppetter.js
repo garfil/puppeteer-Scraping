@@ -109,11 +109,6 @@ async function goToPage(url, browser) {
             // const pageHTML = await page.evaluate('new XMLSerializer().serializeToString(document.doctype) + document.documentElement.outerHTML');
             
             
-            // let bodyHandle = await page.$("body");
-            // let pageHTML = await page.evaluate(
-            // (body) => body.outerHTML,
-            // bodyHandle
-            // );
             let { pageHeadHTML, pageHTML } = await page.evaluate(() => {
                 const head = document.querySelector('head');
                 const body = document.querySelector('body');
@@ -136,12 +131,7 @@ async function goToPage(url, browser) {
               pageHTML = pHTML.pageHTML;
               pageHeadHTML = pHTML.pageHeadHTML;
             } 
-            // let headHandle = await page.$("head");
-            // let pageHeadHTML = await page.evaluate(
-            //     (head) => head.outerHTML,
-            //     headHandle
-            //     );
-        // console.log("puppeteer body ", pageHTML);
+
             
             if(pageHTML.includes('<div id="__next"') || pageHTML.includes('<div data-react') ||  pageHTML.includes('<div data-reactroot="')){
                 if(pageHTML.includes('<div id="__next"></div><script')){

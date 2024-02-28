@@ -16,10 +16,16 @@ pipeline {
     }
     
     post {
-        always {
-            // Mark the build as complete
+        success {
+            // Mark the build as successful
             script {
                 currentBuild.result = 'SUCCESS'
+            }
+        }
+        failure {
+            // Mark the build as failed
+            script {
+                currentBuild.result = 'FAILURE'
             }
         }
     }

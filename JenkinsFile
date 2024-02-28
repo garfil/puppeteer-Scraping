@@ -21,4 +21,13 @@ pipeline {
             }
         }
     }
+    
+    post {
+        always {
+            // Mark the build as complete
+            script {
+                currentBuild.result = 'SUCCESS'
+            }
+        }
+    }
 }

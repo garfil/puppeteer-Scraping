@@ -1,19 +1,22 @@
-pipline{
+pipeline {
     agent any
-    stages{
-        stage("checkout"){
-            steps{
+    
+    stages {
+        stage("checkout") {
+            steps {
                 checkout scm
             }
         }
-        stage("Test"){
-            steps{
+        
+        stage("Test") {
+            steps {
                 sh "sudo npm install"
                 sh "npm test"
             }
         }
-        stage("Build"){
-            steps{
+        
+        stage("Build") {
+            steps {
                 sh "npm start"
             }
         }

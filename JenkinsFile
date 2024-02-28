@@ -17,7 +17,7 @@ pipeline {
         stage("Build") {
             steps {
                 bat "npm install -g nodemon"
-                bat "npm start"
+                bat "npx nodemon puppetter.js"
             }
         }
     }

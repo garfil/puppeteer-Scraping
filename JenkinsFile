@@ -8,16 +8,9 @@ pipeline {
             }
         }
         
-        stage("PackageInstall") {
+        stage("Build Image") {
             steps {
-                bat "npm install"
-            }
-        }
-        
-        stage("Build") {
-            steps {
-                bat "npm install -g nodemon"
-                bat "npx nodemon puppetter.js"
+                bat "docker build -t myjenkinsapp ."
             }
         }
     }

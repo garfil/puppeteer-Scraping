@@ -1,0 +1,17 @@
+{
+  "name": "puppeteer-scraping",
+  "version": "1.0.0",
+  "description": "scrap a web page using puppeteer.",
+  "main": "puppetter.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "nodemon puppetter.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "puppeteer": "^22.3.0"
+  }
+}

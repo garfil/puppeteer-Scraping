@@ -10,7 +10,22 @@ pipeline {
         
         stage("Build Image") {
             steps {
-                bat "docker build -t myjenkinsapp ."
+                script {
+                    def imageName = "myjenkinsapp"
+                    def version = ""
+                    
+                    // Check if the image already exists
+                    def imageExists = bat(script: "docker image inspect $imageName", returnStatus: true) == 0
+                    
+                    // If the image exists, create a new version
+                    if (imageExists) {
+                        version = bat(script: "docker inspect --format '{{ index .Config.Labels \"version\" }}' $imageName", returnStdout: true).trim()
+                        version = version.toInteger() + 1
+                    }
+                    
+                    // Build the Docker image with the new version
+                    bat "docker build -t $imageName:$version ."
+                }
             }
         }
     }

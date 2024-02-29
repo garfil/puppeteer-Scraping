@@ -14,7 +14,7 @@ pipeline {
                     def dockerImageName = "puppetter"
                     def dockerImageVersion = getDockerImageVersion(dockerImageName)
 
-                    def dockerImageExists = sh(script: "docker images -q $dockerImageName:$dockerImageVersion", returnStatus: true) == 0
+                    def dockerImageExists = sh(script: "sudo docker images -q $dockerImageName:$dockerImageVersion", returnStatus: true) == 0
 
                     if (!dockerImageExists) {
                         echo "Docker image not found. Building using Ubuntu system."
@@ -43,10 +43,10 @@ pipeline {
 
 def getDockerImageVersion(imageName) {
     def version = 1
-    def dockerImageDetails = sh(script: "docker images --format \"{{.Tag}}\" $imageName", returnStdout: true).trim()
+    def dockerImageDetails = sh(script: "sudo docker images --format \"{{.Tag}}\" $imageName", returnStdout: true).trim()
 
     if (dockerImageDetails) {
-        def versions = dockerImageDetails.tokenize('\n').collect { it.toInteger() }
+        def versions = sudo dockerImageDetails.tokenize('\n').collect { it.toInteger() }
         version = versions.max() + 1
     }
 

@@ -5,7 +5,7 @@
   "main": "puppetter.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "set NODE_ENV=test&&nodemon puppetter.js"
+    "start" : "export NODE_ENV=test && nodemon puppetter.js"
   },
   "keywords": [],
   "author": "",

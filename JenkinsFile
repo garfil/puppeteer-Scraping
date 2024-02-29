@@ -36,19 +36,12 @@ pipeline {
 
 def getDockerImageVersion(imageName) {
     def version = 1
-    def imageExists = bat(script: "docker images $imageName", returnStatus: true) == 0
+    def dockerImageDetails = bat(script: "docker images --format \"{{.Tag}}\" $imageName", returnStdout: true).trim()
 
-    if (imageExists) {
-        version = getVersionFromDockerImage(imageName)
-        version++
+    if (dockerImageDetails) {
+        def versions = dockerImageDetails.tokenize('\n').collect { it.toInteger() }
+        version = versions.max() + 1
     }
 
     return version
-}
-
-def getVersionFromDockerImage(imageName) {
-    def dockerImageDetails = bat(script: "docker images --format \"{{.Tag}}\" $imageName", returnStdout: true).trim()
-    def versions = dockerImageDetails.tokenize('\n').collect { it.toInteger() }
-
-    return versions.max()
 }

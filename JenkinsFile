@@ -11,20 +11,10 @@ pipeline {
         stage("Build Image") {
             steps {
                 script {
-                    def imageName = "myjenkinsapp"
-                    def version = ""
-                    
-                    // Check if the image already exists
-                    def imageExists = bat(script: "docker image inspect $imageName", returnStatus: true) == 0
-                    
-                    // If the image exists, create a new version
-                    if (imageExists) {
-                        version = bat(script: "docker inspect --format '{{ index .Config.Labels \"version\" }}' $imageName", returnStdout: true).trim()
-                        version = version.toInteger() + 1
-                    }
-                    
-                    // Build the Docker image with the new version
-                    bat "docker build -t $imageName:$version ."
+                    def dockerImageName = "myjenkinsapp"
+                    def dockerImageVersion = getDockerImageVersion(dockerImageName)
+
+                    bat "docker build -t $dockerImageName:$dockerImageVersion ."
                 }
             }
         }
@@ -32,16 +22,33 @@ pipeline {
     
     post {
         success {
-            // Mark the build as successful
             script {
                 currentBuild.result = 'SUCCESS'
             }
         }
         failure {
-            // Mark the build as failed
             script {
                 currentBuild.result = 'FAILURE'
             }
         }
     }
+}
+
+def getDockerImageVersion(imageName) {
+    def version = 1
+    def imageExists = bat(script: "docker images $imageName", returnStatus: true) == 0
+
+    if (imageExists) {
+        version = getVersionFromDockerImage(imageName)
+        version++
+    }
+
+    return version
+}
+
+def getVersionFromDockerImage(imageName) {
+    def dockerImageDetails = bat(script: "docker images --format \"{{.Tag}}\" $imageName", returnStdout: true).trim()
+    def versions = dockerImageDetails.tokenize('\n').collect { it.toInteger() }
+
+    return versions.max()
 }

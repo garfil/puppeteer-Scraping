@@ -1,10 +1,5 @@
 pipeline {
     agent any
-    
-    environment {
-        DOCKER_IMAGE_NAME = 'puppetter'
-        DOCKER_IMAGE_VERSION = getDockerImageVersion(DOCKER_IMAGE_NAME)
-    }
 
     stages {
         stage("Checkout") {
@@ -16,14 +11,8 @@ pipeline {
         stage("Build Image") {
             steps {
                 script {
-                    def dockerImageExists = sh(script: "docker images -q $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION", returnStatus: true) == 0
-
-                    if (!dockerImageExists) {
-                        echo "Docker image not found. Building using Ubuntu system."
-                        sh "docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_VERSION ."
-                    } else {
-                        echo "Docker image already available."
-                    }
+                    echo "Docker image not found. Building using Ubuntu system."
+                    sh "docker build -t puppetter:latest ."
                 }
             }
         }
@@ -41,16 +30,4 @@ pipeline {
             }
         }
     }
-}
-
-def getDockerImageVersion(imageName) {
-    def version = 1
-    def dockerImageDetails = sh(script: "docker images --format \"{{.Tag}}\" $imageName", returnStdout: true).trim()
-
-    if (dockerImageDetails) {
-        def versions = dockerImageDetails.tokenize('\n').collect { it.toInteger() }
-        version = versions.max() + 1
-    }
-
-    return version
 }
